@@ -83,6 +83,9 @@ Three capacity scenarios:
 
 Calculates: energy generation, diesel displacement, CO2 reduction, economic savings (COP).
 
+## Link to web app access
+https://trillium-watts.onrender.com
+
 ## Team — Samsung Innovation Campus 2024
 
 - Edward Nicolas Diaz Cristancho
