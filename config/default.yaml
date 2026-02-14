@@ -1,0 +1,71 @@
+data:
+  google_drive_file_id: "1c-ebPZtK36e_8Wy0GglZ77poM3EWA3o6"
+  raw_data_path: "data/raw/leticia_energy.csv"
+  processed_data_path: "data/processed/leticia_clean.csv"
+  predictions_path: "data/predictions/demanda_historica_y_predicha.csv"
+  csv_separator: ";"
+  csv_encoding: "utf-8-sig"
+  date_column: "FECHA"
+  date_cutoff: "2025-04-01"
+  missing_periods:
+    - ["2016-07-01", "2016-12-31"]
+    - ["2017-02-01", "2017-02-28"]
+    - ["2020-10-01", "2020-11-30"]
+    - ["2023-09-01", "2023-09-30"]
+    - ["2024-05-01", "2024-05-31"]
+
+features:
+  target: "ACTIVA"
+  feature_columns:
+    - "ACTIVA"
+    - "month_sin"
+    - "month_cos"
+    - "dayofyear_sin"
+    - "dayofyear_cos"
+    - "weekday_sin"
+    - "weekday_cos"
+    - "weekofyear_sin"
+    - "weekofyear_cos"
+    - "REACTIVA"
+    - "ALLSKY_SFC_SW_DWN"
+    - "T2M"
+
+model:
+  window_size: 15
+  train_split_ratio: 0.8
+  model_save_path: "models/"
+  param_grid:
+    units: [32, 64]
+    dropout: [0.2, 0.3]
+    batch_size: [32]
+    learning_rate: [0.001]
+    epochs: [50]
+  early_stopping:
+    monitor: "val_loss"
+    patience: 10
+    restore_best_weights: true
+
+prediction:
+  horizons: [7, 15, 30]
+  default_horizon: 30
+
+solar:
+  default_h_radiation: 4.5
+  default_performance_ratio: 0.80
+  scenarios:
+    "Pequena (100 kW)": 100
+    "Mediana (1 MW)": 1000
+    "Grande (5 MW)": 5000
+
+economic:
+  kwh_per_liter_diesel: 3.0
+  co2_per_liter_diesel: 2.20
+  diesel_price_cop: 2553.59
+
+visualization:
+  tipo_labels:
+    historical: "Historica"
+    predicted: "Predicha"
+  colors:
+    historical: "#1d7a8d"
+    predicted: "#ff6f00"
