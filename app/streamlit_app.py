@@ -30,10 +30,12 @@ def load_predictions(path: str) -> pd.DataFrame:
     df = df.sort_values("Fecha")
     # Standardize Tipo labels
     tipo_map = {
+        "Histórico": "Historica",
         "Historico": "Historica",
         "historico": "Historica",
         "Historica": "Historica",
         "historica": "Historica",
+        "Predicción": "Predicha",
         "Prediccion": "Predicha",
         "prediccion": "Predicha",
         "Predicha": "Predicha",
