@@ -6,45 +6,60 @@ This project uses Deep Learning (LSTM/GRU) to predict daily electrical energy de
 
 ## Executive Summary
 
-### Objective
+### 1. Context
 
-Leticia, Amazonas is a non-interconnected zone in Colombia that relies heavily on diesel generation to meet its electricity needs. This project develops a complete machine learning pipeline to (1) forecast short-term energy demand and (2) evaluate the feasibility of solar photovoltaic installations as a partial replacement for diesel generation.
+Leticia is the capital of the Amazonas department in southern Colombia, located at the triple border with Brazil and Peru. As a **Non-Interconnected Zone (ZNI)**, it is not connected to Colombia's national electrical grid (Sistema Interconectado Nacional). The city depends almost entirely on **diesel-powered thermal generation** to supply electricity to its ~50,000 inhabitants, making its energy supply expensive, logistically constrained, and environmentally costly. Diesel fuel must be transported by river or air into one of the most biodiverse regions on Earth, where every liter burned contributes to CO2 emissions and local air pollution in the heart of the Amazon rainforest.
 
-### Methodology
+### 2. Problem
 
-A GRU (Gated Recurrent Unit) neural network was trained on ~10 years of daily energy consumption data (2015–2025), incorporating 12 features: active energy demand, cyclic-encoded temporal features (month, day of year, weekday, week of year), reactive energy, surface solar radiation, and temperature. The model uses a 15-day sliding window with autoregressive multi-step forecasting to produce 30-day demand predictions.
+The reliance on diesel generation in Leticia creates three compounding challenges:
 
-Data preprocessing included imputation of five known missing periods via year-ago reference values, IQR-based outlier removal with linear interpolation, and MinMaxScaler normalization. Hyperparameter tuning was performed via grid search over network units (32/64), dropout rates (0.2/0.3), and training configurations, with early stopping on validation loss.
+- **Economic**: Diesel fuel costs are high and volatile, with prices inflated by remote transportation logistics. At COP ~2,554/liter, electricity generation costs far exceed the national average.
+- **Environmental**: Each liter of diesel emits ~2.20 kg of CO2. In a region whose ecological value is global, continued fossil fuel dependence contradicts Colombia's climate commitments and the Amazon's conservation priorities.
+- **Planning**: Without accurate short-term demand forecasting, energy operators cannot efficiently plan fuel procurement, generation schedules, or evaluate renewable energy alternatives with confidence.
 
-### Key Results
+There is a clear need for data-driven tools that can both **predict energy demand** and **quantify the impact of transitioning to renewable sources** — enabling informed decision-making for Leticia's energy future.
 
-| Metric | Value |
-|--------|-------|
-| Best model | GRU |
-| R² score | ~0.63 |
-| Sliding window | 15 days |
-| Prediction horizon | 30 days |
-| Historical daily demand range | 100,000–150,000 kWh/day |
+### 3. Proposed Solution
+
+TrilliumWatts delivers an end-to-end machine learning pipeline with two core capabilities:
+
+**A. Demand Forecasting** — A GRU (Gated Recurrent Unit) deep learning model trained on ~10 years of daily energy data (2015–2025), using 12 features including active energy consumption, cyclic-encoded temporal patterns (month, day of year, weekday, week of year), reactive energy, surface solar radiation, and temperature. The model employs a 15-day sliding window with autoregressive multi-step forecasting to produce predictions up to 30 days ahead.
+
+**B. Solar PV Simulation** — An economic and environmental impact simulator that evaluates three photovoltaic installation scenarios (100 kW, 1 MW, and 5 MW) against forecasted demand. For each scenario, it calculates solar energy generation, diesel displacement, CO2 emission reductions, and cost savings in COP — using configurable parameters for solar radiation, performance ratio, and fuel economics.
+
+Both capabilities are integrated into an **interactive Streamlit dashboard** ([trillium-watts.onrender.com](https://trillium-watts.onrender.com)) that allows stakeholders to explore scenarios, adjust assumptions, and visualize results in real time.
+
+### 4. Key Indicators
+
+#### Model Performance
+
+| Indicator | Value |
+|-----------|-------|
+| Best architecture | GRU |
+| R² score (test set) | ~0.63 |
+| Sliding window size | 15 days |
+| Number of features | 12 |
+| Prediction horizon | Up to 30 days |
+| Historical daily demand | 100,000–150,000 kWh/day |
 | Predicted demand (Apr 2025) | 108,000–138,000 kWh/day |
 
-### Solar Scenario Analysis
+#### Solar Scenario Comparison
 
-Three photovoltaic capacity scenarios were simulated against predicted demand (assuming 4.5 kWh/m²/day solar radiation and 0.80 performance ratio):
+Simulated with default parameters: 4.5 kWh/m²/day solar radiation, 0.80 performance ratio, COP 2,553.59/L diesel.
 
-| Scenario | Capacity | Demand Satisfied | Diesel Displaced | CO2 Reduced | Economic Savings (COP) |
-|----------|----------|-----------------|-------------------|-------------|----------------------|
+| Scenario | Capacity | Demand Satisfied | Diesel Displaced | CO2 Reduction | Economic Savings |
+|----------|----------|-----------------|-------------------|---------------|-----------------|
 | Small | 100 kW | ~0.3–0.5% | Minimal | Minimal | Minimal |
 | Medium | 1 MW | ~3–5% | Moderate | Moderate | Moderate |
 | Large | 5 MW | ~15–25% | Significant | Significant | Significant |
 
-Even the largest scenario (5 MW) covers only a fraction of total demand, highlighting that solar PV alone cannot replace diesel generation in this region but can meaningfully reduce fuel consumption, CO2 emissions, and operating costs. A hybrid approach combining solar with other renewable sources or grid interconnection would be needed for full diesel displacement.
+#### Key Takeaways
 
-### Conclusions
-
-1. **GRU outperforms LSTM** for this time series, achieving R² ~0.63 with a compact architecture.
-2. **Demand patterns are seasonal and consistent**, with the model capturing weekly and annual cycles effectively.
-3. **Solar PV at 5 MW scale** can displace up to ~25% of diesel demand, delivering tangible environmental and economic benefits.
-4. **The interactive dashboard** (deployed at [trillium-watts.onrender.com](https://trillium-watts.onrender.com)) enables stakeholders to explore scenarios with adjustable parameters for radiation, performance ratio, and economic assumptions.
+1. **GRU outperforms LSTM** for this time series, achieving the best R² with a compact architecture and lower computational cost.
+2. **Demand follows stable seasonal and weekly patterns**, which the model captures effectively — predicted values for April 2025 are consistent with historical ranges.
+3. **A 5 MW solar installation could satisfy up to ~25% of daily demand**, delivering meaningful diesel displacement, CO2 reductions, and economic savings — but solar PV alone cannot fully replace diesel generation.
+4. **A hybrid energy strategy** combining solar with other renewables or future grid interconnection would be necessary for full decarbonization of Leticia's electricity supply.
 
 ---
 
